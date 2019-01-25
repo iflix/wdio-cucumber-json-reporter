@@ -72,6 +72,7 @@ class JSONBuilder {
       .steps.findIndex(step => step.id === options.id);
 
     const stepData = {
+      session: options.session,
       keyword: options.keyword,
       line: options.line,
       name: options.name,

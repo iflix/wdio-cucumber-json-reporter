@@ -133,7 +133,7 @@ class CucumberJSONReporter extends EventEmitter {
         line: this.getLineNumberFromUid(test.uid),
         result: {
           status: 'passed',
-          duration: test.duration * 1000000,
+          duration: test.duration,
         },
         embeddings: []
       };
@@ -146,14 +146,18 @@ class CucumberJSONReporter extends EventEmitter {
     });
 
     this.on('test:fail', (test) => {
-
       const step = this.getStepByLineNumber(test.file, this.getLineNumberFromUid(test.uid));
-
+      
       if (step === null) {
         return;
       }
 
+      const results = this.baseReporter.stats.runners[test.cid]
+      const session = `https://saucelabs.com/tests/${results.sessionID}`
+      console.log('results.config: ', JSON.stringify(results.config))
+
       const stepData = {
+        session,
         cid: test.cid,
         type: 'step',
         name: test.title,
@@ -166,7 +170,7 @@ class CucumberJSONReporter extends EventEmitter {
         line: this.getLineNumberFromUid(test.uid),
         result: {
           status: 'failed',
-          duration: test.duration * 1000000,
+          duration: test.duration,
         },
         embeddings: [],
       };
@@ -208,7 +212,7 @@ class CucumberJSONReporter extends EventEmitter {
         line: this.getLineNumberFromUid(test.uid),
         result: {
           status: isPending ? 'pending' : 'skipped',
-          duration: test.duration * 1000000,
+          duration: test.duration,
         },
         embeddings: [],
       };
