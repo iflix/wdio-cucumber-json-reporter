@@ -152,12 +152,8 @@ class CucumberJSONReporter extends EventEmitter {
         return;
       }
 
-      const results = this.baseReporter.stats.runners[test.cid]
-      const session = `https://saucelabs.com/tests/${results.sessionID}`
-      console.log('results.config: ', JSON.stringify(results.config))
-
       const stepData = {
-        session,
+        session: undefined,
         cid: test.cid,
         type: 'step',
         name: test.title,
@@ -174,6 +170,11 @@ class CucumberJSONReporter extends EventEmitter {
         },
         embeddings: [],
       };
+
+      const results = this.baseReporter.stats.runners[test.cid]
+      if (results.config.host.indexOf('saucelabs.com') > -1 || results.config.sauceConnect === true) {
+        stepData.session = `https://saucelabs.com/tests/${results.sessionID}`
+      }
 
       if (test.err.stack) {
         stepData.result.error_message = test.err.stack;
