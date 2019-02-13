@@ -146,7 +146,7 @@ class JSONBuilder {
         browser: {
           name: options.browser,
           // @todo - check if it's possible to get the browser version from wdio events
-          version: options.browser ? options.browser.charAt(0).toUpperCase() + options.browser.slice(1) : '',
+          version: ''
         },
         device: options.deviceName,
         platform: {
